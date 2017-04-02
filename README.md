@@ -55,6 +55,16 @@ The `msg.topic` value will contain the (abbreviated) GC type description:
 * Weak
 * All
 
+## Example flow
+For example, let's get the amount of heap memory being freed by the garbage collector:
+![GC 4](https://raw.githubusercontent.com/bartbutenaers/node-red-contrib-gc/master/images/garbage4.png)
+```
+[{"id":"d4273bb3.2956f8","type":"gc","z":"6beebf75.ed0b5","minor":true,"major":true,"incremental":true,"weak":true,"all":true,"name":"","x":363.01171875,"y":1524.64453125,"wires":[["c79dbd16.6f388"]]},{"id":"c79dbd16.6f388","type":"function","z":"6beebf75.ed0b5","name":"Get heap size freed by GC","func":"function sendWithDelay(message) {\n    node.send(message);\n}\n\n// Pass the totHeapSize difference (i.e. the amount of heap size that has been freed by the GC) and the topic to the output.\n// To get a pulse, make the signal 0 (300 msecs) before and (300 msecs) after the real value.\nsetTimeout(sendWithDelay, 0, {payload:0, topic:msg.topic});\nsetTimeout(sendWithDelay, 300, {payload:Math.abs(msg.payload.diff.totalHeapSize), topic:msg.topic});\nsetTimeout(sendWithDelay, 600, {payload:0, topic:msg.topic});","outputs":1,"noerr":0,"x":583.765625,"y":1524.5,"wires":[["f744096.dfe3af8"]]},{"id":"f744096.dfe3af8","type":"ui_chart","z":"6beebf75.ed0b5","name":"Heap freed graph","group":"1a7f6b0.0560695","order":0,"width":0,"height":0,"label":"Garbage collections","chartType":"line","legend":"false","xformat":"HH:mm:ss","interpolate":"linear","nodata":"Garbage collections","ymin":"0","ymax":"2048576","removeOlder":"1","removeOlderPoints":"","removeOlderUnit":"60","cutout":0,"x":848.375,"y":1524.75,"wires":[[],[]]},{"id":"1a7f6b0.0560695","type":"ui_group","z":"","name":"Performance","tab":"18b10517.00400b","disp":true,"width":"6"},{"id":"18b10517.00400b","type":"ui_tab","z":"","name":"Performance","icon":"show_chart"}]
+```
+
+Based on the topic, this flow can show separate graphs for each GC type (minors in blue and majors in orange):
+![GC 5](https://raw.githubusercontent.com/bartbutenaers/node-red-contrib-gc/master/images/garbage5.png)
+
 ## Node configuration
 
 You can select which GC types should trigger a message on the output port.
@@ -74,12 +84,11 @@ And so on ...  This means an entire memory graph will be constructed, started fr
 ![GC 1](https://raw.githubusercontent.com/bartbutenaers/node-red-contrib-gc/master/images/garbage1.png)
 
 In our example **A** would be a Car object, and **B** would be an Engine object.  Each of the objects can have references to other objects.  
-An object is needed in a program, as long as as that object can be reached (by traversing the memory graph) from the root node.  If it cannot be accessed anymore from the root node, it should be deleted.
+
+An object is needed in a program, as long as as that object can be reached (by traversing the memory graph) from the root node.  If it cannot be accessed anymore from the root node, it should be deleted: like objects *H* and *I* which are unreachable.
 
 ### Garbage collection
 In Javascript a garbage collection system is responsible for cleaning up unreachable objects automatically, when required by the V8 engine.
-
-In the previous image, objects *H* and *I* can be removed (since they are unreachable from the root node).  
 
 The memory consumption in a normal application would look like this:
 ![GC 2](https://raw.githubusercontent.com/bartbutenaers/node-red-contrib-gc/master/images/garbage2.png)
@@ -93,6 +102,5 @@ This way the memory will fluctuate between boundaries, but globally the memory c
 Under certain circumstances, the major garbage collection will not be able to free up all memory (see delta inside circle):
 ![GC 3](https://raw.githubusercontent.com/bartbutenaers/node-red-contrib-gc/master/images/garbage3.png)
 
-Due to this memory leak, the memory consumption will start to increase linear (see blue line).  As a result, the memory consumption will evolve to 10
-0% after some time.  At that moment the application will fail, since it cannot allocate objects anymore.
+Due to this memory leak, the memory consumption will start to increase linear (see blue line).  As a result, the memory consumption will evolve to 100% after some time.  At that moment the application will fail, since it cannot allocate objects anymore.
  
