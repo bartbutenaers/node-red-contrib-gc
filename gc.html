@@ -1,0 +1,54 @@
+<script type="text/javascript">
+    RED.nodes.registerType('gc',{
+        category: 'function',
+        color: '#a6bbcf',
+        defaults: {
+            minor: {value:true},
+            major: {value:true},
+            incremental: {value:true},
+            weak: {value:true},
+            all: {value:true},
+            name: {value:""}
+        },
+        inputs:0,
+        outputs:1,
+        icon: "garbage.png",
+        label: function() {
+            return this.name||"gc";
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="gc">
+    <div class="form-row">
+        <input type="checkbox" id="node-input-minor" style="display: inline-block; width: auto; vertical-align: top;">
+        <label for="node-input-minor" style="width:70%;">Scavenge (minor GC)</label>
+    </div>
+    <div class="form-row">
+        <input type="checkbox" id="node-input-major" style="display: inline-block; width: auto; vertical-align: top;">
+        <label for="node-input-major" style="width:70%;">Mark/Sweep/Compact (major GC)</label>
+    </div>
+    <div class="form-row">
+        <input type="checkbox" id="node-input-incremental" style="display: inline-block; width: auto; vertical-align: top;">
+        <label for="node-input-incremental" style="width:70%;">Incremental marking</label>
+    </div>    
+    <div class="form-row">
+        <input type="checkbox" id="node-input-weak" style="display: inline-block; width: auto; vertical-align: top;">
+        <label for="node-input-weak" style="width:70%;">Weak/Phantom callback processing</label>
+    </div>  
+    <div class="form-row">
+        <input type="checkbox" id="node-input-all" style="display: inline-block; width: auto; vertical-align: top;">
+        <label for="node-input-all" style="width:70%;">All</label>
+    </div>      
+    <br/>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="gc">
+    <p>A node to get statistics after GC (garbage collection) has been executed.</p>
+    <p>Only the selected GC types will be analyzed, and result in a message on the output port.</p>
+</script>
+

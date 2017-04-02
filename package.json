@@ -1,0 +1,27 @@
+{
+    "name"         : "node-red-contrib-gc",
+    "version"      : "0.0.1",
+    "description"  : "A Node Red node to capture garbage collection statistics",
+    "dependencies": {
+        "gc-stats": "1.0.0"
+    },
+    "author": {
+        "name": "Bart Butenaers"
+    },
+    "license": "Apache-2.0",
+    "keywords": [ "node-red", "garbage", "memory", "heap" ],
+    "bugs": {
+        "url": "https://github.com/bartbutenaers/node-red-contrib-gc/issues"
+    },
+    "homepage": "https://github.com/bartbutenaers/node-red-contrib-gc",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/bartbutenaers/node-red-contrib-gc.git"
+    },
+    "node-red"     : {
+        "nodes": {
+            "gc": "gc.js"
+        }
+    }
+}
+
