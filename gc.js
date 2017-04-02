@@ -52,7 +52,7 @@ module.exports = function(RED) {
                     
                     topic = 'Weak';
                     break;  
-                case 8:
+                case 15:
                     if (!node.all) {
                         // Skip all GC if not requested by the user
                         return null;
